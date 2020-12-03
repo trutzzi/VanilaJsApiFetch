@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-size: 1.6rem;
+            font-family: 'Padauk', sans-serif;
+            background-color: #264653;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+        }
+
+        /*=============================================
+        =            Toggle            =
+        =============================================*/
+
+        .module-toggle_container {
+            max-width: 68px;
+            height: 35px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+        }
+
+        .module-toggle_status {
+            position: absolute;
+            right: 100%;
+            font-size: 0;
+            width: 150px;
+            position: relative;
+            transition: right .3s ease-in;
+        }
+
+        .module-toggle {
+            display: block;
+            font-size: 0;
+            background-color: #E76F51;
+        }
+
+        .module-toggle_status-bar {
+            width: 50%;
+            height: 35px;
+            font-size: 1.8rem;
+            line-height: 35px;
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            margin-left: -3.5px;
+        }
+
+        .module-toggle_status-bar:first-child {
+            background-color: #F4A261;
+        }
+
+        .module-toggle_status-bar:nth-child(2) {
+            background-color: #E9C46A;
+        }
+
+        .module-toggle_label {
+            vertical-align: middle;
+            padding: 15px;
+            margin-right: 15px;
+            text-align: center;
+            display: inline-block;
+            font-size: 1.4rem;
+        }
+
+        /*=====  End of Toggle  ======*/
+
+        /*=============================================
+        =            Module News            =
+        =============================================*/
+        .module_news-item~.module_news-item {
+            margin-bottom: 25px;
+        }
+
+        .module_news-item {
+            padding: 15px;
+        }
+
+        .module-news_date {
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        .module-news_title {
+            font-size: 3.4rem;
+            text-transform: uppercase;
+        }
+
+        .loading {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-weight: bold;
+            color: #E9C46A;
+            font-size: 3.4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99;
+            transition: all 0.2s;
+            opacity: 0.7;
+            background-color: #2A9D8F;
+        }
+
+        .loading.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /*=====  End of Module News  ======*/
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercize</title>
+</head>
+
+<body>
+    <div class="loading hide">Loading</div>
+    <div class="container">
+        <div class="module-news">
+            <div class="module-news_control">
+                <span id="module-toggle" class="module-toggle">
+                    <span class="module-toggle_label">Refresh: </span>
+                    <div class="module-toggle_container">
+                        <div class="module-toggle_status">
+                            <div class="module-toggle_status-bar">1</div>
+                            <div class="module-toggle_status-bar">0</div>
+                        </div>
+                    </div>
+                </span>
+            </div>
+            <div class="module-news_content">
+
+            </div>
+        </div>
+    </div>
+    <script>
+        // Define functions
+        function toggle(container, text, status, disabled, callbackF) {
+            /* 
+                Toggle function to reuse it when needed
+
+                Container of the toggle
+                Text label for toggle
+                Status from the start
+                Disabled / if is true, you cant dezactivate the toggle
+                Callbackf is function that trigger after click
+            */
+            isDisabled = false
+            console.log('initialize')
+            if (!isDisabled) {
+                var toggle = document.querySelector(container)
+                if (status === true) {
+                    toggle.querySelectorAll('.module-toggle_status')[0].style.right = 0;
+                } else {
+                    toggle.querySelectorAll('.module-toggle_status')[0].style.right = '100%';
+                }
+                toggle.querySelectorAll('.module-toggle_container')[0].addEventListener('click', function () {
+                    if (disabled) {
+                        // isDisabled = true
+                        console.log(isDisabled)
+                    }
+                    status = !status
+                    if (status === true) {
+                        callbackF();
+                        toggle.querySelectorAll('.module-toggle_status')[0].style.right = 0;
+                    } else {
+                        toggle.querySelectorAll('.module-toggle_status')[0].style.right = '100%';
+                    }
+                })
+            }
+        }
+
+        function newArticle(title, body, dateDef) {
+            /*
+                Function to create news item
+
+                Title of the news item
+                Body of the news item
+                DateDef of the news item 
+            */
+            var createDate = new Date(dateDef)
+            var dY = createDate.getFullYear()
+            var dD = createDate.getDate()
+            var dM = createDate.getMonth() + 1
+            var myDate = dD + '.' + dM + '.' + dY
+            var container = document.querySelector('.module-news_content');
+            var item = document.createElement("div")
+            item.className = 'module_news-item'
+            var Ititle = document.createElement("div")
+            Ititle.className = 'module-news_title'
+            Ititle.innerHTML = title
+            var Ibody = document.createElement("div")
+            Ibody.className = 'module-news_body'
+            Ibody.innerHTML = body
+            var Idate = document.createElement("div")
+            Idate.className = 'module-news_date'
+            Idate.innerHTML = myDate
+            item.appendChild(Ititle)
+            item.appendChild(Ibody)
+            item.appendChild(Idate)
+            container.appendChild(item)
+        }
+        async function getData() {
+            var loading = document.querySelector('.loading')
+            loading.classList.remove('hide');
+
+            // Api Fetch and preload data
+            var request = await fetch('https://catfact.ninja/facts?limit=20')
+            console.log(request)
+            if (request.ok == true) {
+                loading.classList.add('hide');
+            }
+            var response = await request.json();
+            var data = response.data
+            for (i = 0; i < data.length; i++) {
+                newArticle('New Title', data[i].fact, '01 01 2020')
+            }
+        }
+        // Initialize
+        toggle('#module-toggle', 'Refresh', false, true, function () {
+            // Call back get data 
+            getData();
+        })
+    </script>
+
+</body>
+
+</html>
